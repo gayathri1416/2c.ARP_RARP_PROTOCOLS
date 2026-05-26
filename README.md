@@ -17,10 +17,65 @@ stored.
 5. Map the IP address with its MAC address and return the MAC address to client.
 P
 
-## PROGRAM AND OUTPUT - ARP
+## PROGRAM 
+```
+client.py
+
+import socket
+s=socket.socket() 
+s.bind(('localhost',8000)) 
+s.listen(5) 
+c,addr=s.accept()
+address={"165.165.80.80":"6A:08:AA:C2","165.165.79.1":"8A:BC:E3:FA"};
+while True: 
+    ip=c.recv(1024).decode() 
+    try:
+        c.send(address[ip].encode())
+    except KeyError:
+        c.send("Not Found".encode())
+
+server.py
+
+import socket 
+s=socket.socket() 
+s.connect(('localhost',8000)) 
+while True:
+    ip=input("Enter logical Address : ")
+    s.send(ip.encode())
+    print("MAC Address",s.recv(1024).decode())
+
+```
+## OUTPUT - ARP
 <img width="1917" height="1078" alt="Screenshot 2026-05-16 160705" src="https://github.com/user-attachments/assets/9670269a-00f4-413f-9aa6-c892ff455896" />
 
-## PROGRAM AND OUTPUT- RARP
+## PROGRAM
+```
+client.py
+
+import socket 
+s=socket.socket() 
+s.bind(('localhost',9000)) 
+s.listen(5) 
+c,addr=s.accept() 
+address={"6A:08:AA:C2":"192.168.1.100","8A:BC:E3:FA":"192.168.1.99"}; 
+while True:
+    ip=c.recv(1024).decode() 
+    try: 
+        c.send(address[ip].encode()) 
+    except KeyError: 
+        c.send("Not Found".encode())
+
+server.py
+
+import socket
+s=socket.socket() 
+s.connect(('localhost',9000)) 
+while True: 
+    ip=input("Enter MAC Address : ") 
+    s.send(ip.encode()) 
+    print("Logical Address", s.recv(1024).decode())
+```
+## OUTPUT- RARP
 <img width="1915" height="1078" alt="Screenshot 2026-05-16 185110" src="https://github.com/user-attachments/assets/54d09427-640d-4a2d-8e4e-3578f72e7625" />
 
 ## RESULT
